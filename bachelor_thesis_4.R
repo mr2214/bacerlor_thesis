@@ -448,7 +448,7 @@ above_Soil_M <- merge(above_Soil_M, info,by = "plant_id")
 hist(above_Soil_M$water_mass_above_ground)
 above_Soil_M
 shapiro.test(G_macrorrhizum_4$Dry_biomass_grams_sixty_degrees_after_one_day)
-above
+
 model  <- lm(water_mass_above_ground ~ biochar * greywater, data = above_Soil_M)
 ggqqplot(residuals(model))
 shapiro.test(residuals(model))
@@ -557,17 +557,21 @@ leveneTest(water_mass ~ biochar * greywater, data = below_G)
 fm <- aov(water_mass ~ biochar * greywater, data = below_G)
 summary(fm)
 ######################
-data_drying
+data_drying <- read.xlsx(xlsxFile = "Copy_of_Copy_of_Results_pot_experiment_2021_2022_all.xlsx",sheet = "Final_results")
+data_drying$`Type.of.biomass.(Leaves:.L,.Flowers:.F,.Rhizomes:.R)` <- as.factor(data_drying$`Type.of.biomass.(Leaves:.L,.Flowers:.F,.Rhizomes:.R)`)
+data_drying <- as.data.table(data_drying)
 data_drying[`Type.of.biomass.(Leaves:.L,.Flowers:.F,.Rhizomes:.R)` == "R", location_biomass := "below_ground"]
 data_drying[(`Type.of.biomass.(Leaves:.L,.Flowers:.F,.Rhizomes:.R)` == "L") | (`Type.of.biomass.(Leaves:.L,.Flowers:.F,.Rhizomes:.R)` == "F"), location_biomass := "above_ground"]
 water_data
 data_drying <- data_drying[,c(1,2,4,6,7,10)]
+data_drying
 colnames(data_drying) <- c("number","species","dry_mass","greywater","biochar","location_biomass")
 data_drying[,mean(dry_mass), by = .(location_biomass,species,greywater,biochar)]
 
 above_Soil_M <- data_drying[(location_biomass == "above_ground") & species == "A.maritima"]
 above_Soil_M[,sum(dry_mass),by = number]
 above_Soil_M <- above_Soil_M[,sum(dry_mass),by = number]
+above_Soil_M
 info
 colnames(above_Soil_M) <- c("plant_id","dry_mass_above_ground")
 above_Soil_M$plant_id <- as.factor(above_Soil_M$plant_id)
@@ -579,12 +583,14 @@ hist(above_Soil_M$dry_mass_above_ground)
 above_Soil_M
 shapiro.test(G_macrorrhizum_4$Dry_biomass_grams_sixty_degrees_after_one_day)
 above
+above_Soil_M
 model  <- lm(dry_mass_above_ground ~ biochar * greywater, data = above_Soil_M)
 ggqqplot(residuals(model))
 shapiro.test(residuals(model))
 leveneTest(dry_mass_above_ground ~ biochar * greywater, data = above_Soil_M)
 fm <- aov(dry_mass_above_ground ~ biochar * greywater, data = above_Soil_M)
 summary(fm)
+plot(fm)
 
 below_Soil_M <- data_drying[(location_biomass == "below_ground") & species == "A.maritima"]
 below_Soil_M[,sum(water_mass),by = number]
@@ -607,15 +613,18 @@ fm <- aov(dry_mass ~ biochar * greywater, data = below_Soil_M)
 summary(fm)
 data_drying
 above_Soil_G <- data_drying[(location_biomass == "above_ground") & species == "G.Macrorrhizum"]
+above_Soil_G
 above_Soil_M[,sum(dry_mass),by = number]
+
 above_Soil_G <- above_Soil_G[,sum(dry_mass),by = number]
+above_Soil_G
 info
 colnames(above_Soil_G) <- c("plant_id","dry_mass_above_ground")
 above_Soil_G$plant_id <- as.factor(above_Soil_G$plant_id)
 str(above_Soil_M)
 str(info)
 above_Soil_G <- merge(above_Soil_G, info,by = "plant_id")
-above_Soil_M
+above_Soil_G
 hist(above_Soil_G$dry_mass_above_ground)
 above_Soil_M
 shapiro.test(G_macrorrhizum_4$Dry_biomass_grams_sixty_degrees_after_one_day)
@@ -667,6 +676,6 @@ model  <- lm(dry_mass ~ biochar * greywater, data = below_Soil_G)
 ggqqplot(residuals(model))
 shapiro.test(residuals(model))
 #sapiro test fails futher analysis is needed
-leveneTest(dry_mass ~ biochar * greywater, data = below_Soil_M)
-fm <- aov(dry_mass ~ biochar * greywater, data = below_Soil_M)
+leveneTest(dry_mass ~ biochar * greywater, data = below_Soil_G)
+fm <- aov(dry_mass ~ biochar * greywater, data = below_Soil_G)
 summary(fm)
